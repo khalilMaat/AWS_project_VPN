@@ -12,9 +12,15 @@ provider "aws" {
     region = "us-east-1"
 }
 
-module "keypair" {
-    source = "./modules/keypair"
+module "my_vpc" {
+  source = "./modules/my_vpc"
+}
+module "securityGroups" {
+  source = "./modules/securityGroups"
 }
 module "instances" {
     source = "./modules/instances"
+}
+module "output" {
+  source = "./modules/outputs"
 }
