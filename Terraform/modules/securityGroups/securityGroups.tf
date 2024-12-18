@@ -1,5 +1,6 @@
 resource "aws_security_group" "normalSG" {
-    vpc_id = module.vpc.my_vpc.id
+    name        = "normalSG"
+    vpc_id      = var.vpc_id
 
     ingress {
         from_port = 22
@@ -36,4 +37,8 @@ resource "aws_security_group" "normalSG" {
     tags = {
         Name = "normalSG"
     }
+}
+
+output "normalSG_id" {
+  value = aws_security_group.normalSG.id
 }

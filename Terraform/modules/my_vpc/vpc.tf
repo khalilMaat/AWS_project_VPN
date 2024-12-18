@@ -1,3 +1,4 @@
+# Create a VPC
 resource "aws_vpc" "my_vpc" {
     cidr_block = "10.0.0.0/16"
     enable_dns_support = true
@@ -29,6 +30,7 @@ resource "aws_subnet" "public_subnetA" {
         Name = "PublicSubnet-A"
     }
 }
+
 resource "aws_subnet" "public_subnetB" {
     vpc_id                  = aws_vpc.my_vpc.id
     cidr_block              = "10.0.2.0/24"
@@ -85,15 +87,6 @@ resource "aws_subnet" "private_subnetF" {
     }
 }
 
-# Create a DB subnet group that includes Subnet-B
-resource "aws_db_subnet_group" "mydb_subnet_group" {
-  name       = "mydb-subnet-group"
-  subnet_ids = [aws_subnet.public_subnetD.id]
-
-  tags = {
-    Name = "MyDBSubnetGroup"
-  }
-}
 
 # Create a Route Table for the Public Subnet
 resource "aws_route_table" "public_route_table" {
@@ -110,7 +103,39 @@ resource "aws_route_table" "public_route_table" {
 }
 
 # Associate the Public Subnet with the Route Table
-resource "aws_route_table_association" "public_subnet_association" {
-  subnet_id      = aws_subnet.public_subnet.id
+resource "aws_route_table_association" "public_subnetA_association" {
+  subnet_id      = aws_subnet.public_subnetA.id
   route_table_id = aws_route_table.public_route_table.id
+}
+
+resource "aws_route_table_association" "public_subnetB_association" {
+  subnet_id      = aws_subnet.public_subnetB.id
+  route_table_id = aws_route_table.public_route_table.id
+}
+
+output "public_subnetA" {
+  value = aws_subnet.public_subnetA.id
+}
+
+output "public_subnetB" {
+  value = aws_subnet.public_subnetB.id
+}
+
+output "private_subnetC" {
+  value = aws_subnet.private_subnetC.id
+}
+output "private_subnetD" {
+  value = aws_subnet.private_subnetD.id
+}
+
+output "private_subnetE" {
+  value = aws_subnet.private_subnetE.id
+}
+
+output "private_subnetF" {
+  value = aws_subnet.private_subnetF.id
+}
+
+output "vpc_id" {
+    value = aws_vpc.my_vpc.id
 }
