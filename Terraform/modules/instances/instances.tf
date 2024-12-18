@@ -5,15 +5,8 @@ resource "aws_instance" "frontend-a" {
     security_groups         = var.security_groups
     subnet_id               = var.public_subnetA
     availability_zone       = "us-east-1a"
-    #spot_price              = "0.03"
-    #block_duration_minutes  = 360 # 6 hours
-    instance_market_options {
-        market_type = "spot"
-    spot_options {
-      max_price = "0.0031" # Maximum hourly price you're willing to pay
-      valid_until = timestamp() + var.valid_duration_hours * 3600 # 6 hours from now
-    }
-  }
+   
+   
     tags = {
         Name = "Frontend-a"
     }
@@ -27,13 +20,7 @@ resource "aws_instance" "frontend-b" {
     security_groups         = var.security_groups
     subnet_id               = var.public_subnetB
     availability_zone       = "us-east-1b"
-    instance_market_options {
-        market_type = "spot"
-    spot_options {
-      max_price = "0.0031" # Maximum hourly price you're willing to pay
-      valid_until = timestamp() + var.valid_duration_hours * 3600 # 6 hours from now
-    }
-  }
+    
 
     tags = {
         Name = "Frontend-b"
