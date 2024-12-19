@@ -36,7 +36,8 @@ The project addresses the challenge of connecting on-premises infrastructure to 
 ## Prerequisites
 
 Tools:
-  - Terraform (v5.81.0 or later)
+  - hashicorp/aws (v5.80.0 or later)
+  - Terraform v1.9.8
   - Ansible
   - AWS CLI configured with valid credentials
 
