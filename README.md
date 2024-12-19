@@ -49,17 +49,17 @@ On-Prem Requirements:
 
 ## Usage
 1. Clone the Repository
-  git clone https://github.com/your-repo/aws-terraform-ansible.git
-  cd aws-terraform-ansible
+  - git clone https://github.com/your-repo/aws-terraform-ansible.git
+  - cd aws-terraform-ansible
 
-2. Deploy the Infrastructure
-  terraform init
-  terraform apply
+3. Deploy the Infrastructure
+  - terraform init
+  - terraform apply
 
-3. Run Ansible Playbooks
-  cd ansible
-  ansible-playbook init.yml
-  ansible-playbook deploy_web_app.yml
+4. Run Ansible Playbooks
+  - cd ansible
+  - ansible-playbook init.yml
+  - ansible-playbook deploy_web_app.yml
 
 
 Author
