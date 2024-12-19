@@ -49,8 +49,8 @@ On-Prem Requirements:
 
 ## Usage
 1. Clone the Repository
-  - git clone https://github.com/your-repo/aws-terraform-ansible.git
-  - cd aws-terraform-ansible
+  - git clone https://github.com/khalilMaat/AWS_project_VPN.git
+  - cd AWS_project_VPN
 
 3. Deploy the Infrastructure
   - terraform init
