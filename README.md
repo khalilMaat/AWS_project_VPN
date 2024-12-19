@@ -32,20 +32,41 @@ The project addresses the challenge of connecting on-premises infrastructure to 
 - **Automation:**
   - Ansible used for system updates, registration, and web app deployment.
 
-## Project Structure
 
-```plaintext
-.
-├── modules/
-│   ├── vpc/
-│   ├── subnets/
-│   ├── security_groups/
-│   ├── ec2_instances/
-│   ├── load_balancer/
-│   └── ...
-├── ansible/
-│   ├── playbooks/
-│   │   ├── init.yml
-│   │   └── deploy_web_app.yml
-│   └── inventory
+## Prerequisites
+
+Tools:
+  - Terraform (v5.81.0 or later)
+  - Ansible
+  - AWS CLI configured with valid credentials
+
+AWS Resources:
+  - IAM Role with appropriate permissions
+  - SSH Key Pair for EC2 instances
+On-Prem Requirements:
+  - VPN Gateway or equivalent setup for connecting to AWS.
+
+## Usage
+1. Clone the Repository
+  git clone https://github.com/your-repo/aws-terraform-ansible.git
+  cd aws-terraform-ansible
+
+2. Deploy the Infrastructure
+  terraform init
+  terraform apply
+
+3. Run Ansible Playbooks
+  cd ansible
+  ansible-playbook init.yml
+  ansible-playbook deploy_web_app.yml
+
+
+Author
+Khalil Maatoug
+
+DevOps Engineer | RHCSA | RHCE | AWS
+Email: maatoug610@gmail.com
+
+
+
 
