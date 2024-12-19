@@ -25,7 +25,3 @@ variable "private_subnetE" {
 variable "private_subnetF" {
   type = string
 }
-
-variable "valid_duration_hours" {
-  default = 6  # Default duration in hours
-}
