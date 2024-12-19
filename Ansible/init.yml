@@ -1,0 +1,29 @@
+---
+- name: Playbook init tasks for all server
+  hosts: webservers
+  gather_facts: true
+  vars_files:
+    - credentials.yml
+
+  tasks:
+    - name: Update system packages.
+      yum:
+        name: "*"
+        state: latest
+
+    - name: Register packages redhat.
+      community.general.redhat_subscription:
+        state: present
+        username: "{{ USERNAME }}"
+        password: "{{ PASSWORD }}"
+        auto_attach: true
+      when: ansible_facts['distribution'] == "RedHat"
+
+    - name: Create static dns hosts.
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - {src: "hosts.j2", dest: "/etc/hosts"}
+        - {src: "inventory_hostname.j2", dest: "/home/ec2-user/inventory_hostname"}
+

@@ -1,0 +1,15 @@
+[frontend]
+frontend-a
+frontend-b
+
+[backend]
+backend-a
+backend-b
+
+[databases]
+rds-a
+rds-b
+
+[webservers:children]
+frontend
+backend
