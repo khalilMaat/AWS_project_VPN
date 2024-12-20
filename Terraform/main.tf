@@ -28,5 +28,15 @@ module "instances" {
     private_subnetD = module.my_vpc.private_subnetD
     private_subnetE = module.my_vpc.private_subnetE
     private_subnetF = module.my_vpc.private_subnetF
+}
+
+module "load_balancer" {
+  source = "./modules/load_balancer"
+  security_groups = [module.securityGroups.normalSG_id]
+  vpc_id = module.my_vpc.vpc_id
+  public_subnetA  = module.my_vpc.public_subnetA
+  public_subnetB  = module.my_vpc.public_subnetB
+  frontend_a = module.instances.frontend_a
+  frontend_b = module.instances.frontend_b
 
 }

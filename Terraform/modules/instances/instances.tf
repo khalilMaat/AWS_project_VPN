@@ -53,3 +53,16 @@ resource "aws_instance" "backend-b" {
     }
 
 }
+
+output "frontend_a" {
+  value = aws_instance.frontend-a.id
+}
+output "frontend_b" {
+  value = aws_instance.frontend-b.id
+}
+output "backend-a" {
+  value = aws_instance.backend-a.id
+}
+output "backend-b" {
+  value = aws_instance.backend-b.id
+}
