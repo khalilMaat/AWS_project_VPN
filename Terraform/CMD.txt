@@ -1,0 +1,18 @@
+#1 Steps to run Terrafrom command:
+> terraform init
+> terraform validate
+> terraform plan
+> terraform apply
+> terraform state list
+
+#2 if you modified resources outside Terraform
+> terraform refresh
+
+#3 Deletion resources in AWS:
+
+Understand the dependencies among the resources:
+
+ - Instances are associated with subnets and security groups.
+ - Load balancers are linked to target groups and instances.
+ - Internet gateways are attached to the VPC.
+ - Subnets and security groups are part of the VPC.

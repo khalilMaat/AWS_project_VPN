@@ -1,6 +1,6 @@
 ---
 - name: Playbook init tasks for all server
-  hosts: webservers
+  hosts: frontend
   gather_facts: true
   vars_files:
     - credentials.yml

@@ -6,7 +6,7 @@ resource "aws_lb" "LoadBalancer" {
   security_groups    = var.security_groups
   subnets            = [var.public_subnetA, var.public_subnetB]
 
-  enable_deletion_protection = true
+  enable_deletion_protection = false # disable Deletion protection option
 
   tags = {
     Name = "LoadBalancer"
@@ -42,13 +42,14 @@ resource "aws_lb_listener" "http" {
 }
 
 # Register EC2 Instances as Targets
-# resource "aws_lb_target_group_attachment" "frontend_targets" {
-#   for_each = {
-#     frontend_a = var.frontend_a
-#     frontend_b = var.frontend_b
-#   }
+resource "aws_lb_target_group_attachment" "frontend_a" {
+    target_group_arn = aws_lb_target_group.tg.arn
+    target_id        = var.frontend_a
+    port             = 80
+}
 
-#   target_group_arn = aws_lb_target_group.tg.arn
-#   target_id        = each.value
-#   port             = 80
-# }
+resource "aws_lb_target_group_attachment" "frontend_b" {
+    target_group_arn = aws_lb_target_group.tg.arn
+    target_id        = var.frontend_b
+    port             = 80
+}
