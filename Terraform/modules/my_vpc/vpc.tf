@@ -113,6 +113,45 @@ resource "aws_route_table_association" "public_subnetB_association" {
   route_table_id = aws_route_table.public_route_table.id
 }
 
+# NETWORK ACL
+resource "aws_network_acl" "mainACL" {
+  vpc_id = aws_vpc.my_vpc.id
+
+  egress {
+    protocol   = "-1"
+    rule_no    = 200
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 80
+    to_port    = 80
+  }
+
+  tags = {
+    Name = "mainACL"
+  }
+}
+
+# Associate the NACL with Subnets
+resource "aws_network_acl_association" "public_subnetA_nacl_assoc" {
+  subnet_id      = aws_subnet.public_subnetA.id
+  network_acl_id = aws_network_acl.mainACL.id
+}
+
+resource "aws_network_acl_association" "public_subnetB_nacl_assoc" {
+  subnet_id      = aws_subnet.public_subnetB.id
+  network_acl_id = aws_network_acl.mainACL.id
+}
+
+# OUTPUT
 output "public_subnetA" {
   value = aws_subnet.public_subnetA.id
 }
