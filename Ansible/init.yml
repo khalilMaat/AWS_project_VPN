@@ -6,10 +6,17 @@
     - credentials.yml
 
   tasks:
-    - name: Update system packages.
+    - name: Update system packages for redhat.
       yum:
         name: "*"
         state: latest
+      when: ansible_facts['distribution'] == "RedHat"
+
+    - name: Update system packages for Ubuntu.
+      apt:
+        name: "*"
+        state: latest
+      when: ansible_facts['distribution'] == "Ubuntu"
 
     - name: Register packages redhat.
       community.general.redhat_subscription:
@@ -19,11 +26,16 @@
         auto_attach: true
       when: ansible_facts['distribution'] == "RedHat"
 
+    - name: add hostname.
+      ansible.builtin.hostname:
+        name: "{{ ansible_hostname }}"
+
+
     - name: Create static dns hosts.
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
       with_items:
         - {src: "hosts.j2", dest: "/etc/hosts"}
-        - {src: "inventory_hostname.j2", dest: "/home/ec2-user/inventory_hostname"}
+        - {src: "inventory_hostname.j2", dest: "/home/ubuntu/inventory_hostname"}
 
