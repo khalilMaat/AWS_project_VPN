@@ -26,10 +26,8 @@
         auto_attach: true
       when: ansible_facts['distribution'] == "RedHat"
 
-    - name: add hostname.
-      ansible.builtin.hostname:
-        name: "{{ ansible_hostname }}"
-
+    - name: Change hostname of instnces.
+      ansible.builtin.shell: hostnamectl hostname "{{ ansible_hostname }}"
 
     - name: Create static dns hosts.
       template:
@@ -39,3 +37,5 @@
         - {src: "hosts.j2", dest: "/etc/hosts"}
         - {src: "inventory_hostname.j2", dest: "/home/ubuntu/inventory_hostname"}
 
+    - name: Reboot
+      reboot:
