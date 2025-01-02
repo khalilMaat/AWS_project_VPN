@@ -10,7 +10,6 @@ resource "aws_instance" "frontend-a" {
     tags = {
         Name = "Frontend-a"
     }
-    
 }
 
 resource "aws_instance" "frontend-b" {

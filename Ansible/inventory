@@ -1,14 +1,14 @@
 [frontend]
-frontend_a
-frontend_b
+frontenda
+frontendb
 
 [backend]
-backend_a
-backend_b
+backenda
+backendb
 
 [databases]
-rds_a
-rds_b
+rdsa
+rdsb
 
 [webservers:children]
 frontend

@@ -119,7 +119,7 @@ resource "aws_network_acl" "mainACL" {
 
   egress {
     protocol   = "-1"
-    rule_no    = 200
+    rule_no    = 100
     action     = "allow"
     cidr_block = "0.0.0.0/0"
     from_port  = 0
@@ -127,12 +127,12 @@ resource "aws_network_acl" "mainACL" {
   }
 
   ingress {
-    protocol   = "tcp"
+    protocol   = "-1"
     rule_no    = 100
     action     = "allow"
     cidr_block = "0.0.0.0/0"
-    from_port  = 80
-    to_port    = 80
+    from_port  = 0
+    to_port    = 0
   }
 
   tags = {

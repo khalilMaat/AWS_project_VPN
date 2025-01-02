@@ -28,7 +28,7 @@ resource "aws_lb_target_group" "tg" {
 # Attach ALB to Target Group
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.LoadBalancer.arn
-  port              = "80"
+  port              = "8080"
   protocol          = "HTTP"
 
   default_action {
@@ -45,11 +45,11 @@ resource "aws_lb_listener" "http" {
 resource "aws_lb_target_group_attachment" "frontend_a" {
     target_group_arn = aws_lb_target_group.tg.arn
     target_id        = var.frontend_a
-    port             = 80
+    port             = 8080
 }
 
 resource "aws_lb_target_group_attachment" "frontend_b" {
     target_group_arn = aws_lb_target_group.tg.arn
     target_id        = var.frontend_b
-    port             = 80
+    port             = 8080
 }
