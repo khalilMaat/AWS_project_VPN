@@ -7,12 +7,14 @@ resource "aws_security_group" "normalSG" {
         to_port = 22
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow SSH access from anywhere"
     }
     ingress {
         from_port = 8080
         to_port = 8080
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow tomcat port"
     }
     ingress {
         from_port = 80
@@ -25,6 +27,14 @@ resource "aws_security_group" "normalSG" {
         to_port     = -1
         protocol    = "icmp"
         cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow icmp for ping"
+    }
+    ingress {
+        from_port   = 1194 
+        to_port     = 1194
+        protocol    = "UDP"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow for OpenVPN port"
     }
     # Outbound (egress) rule
     egress {
