@@ -16,7 +16,7 @@ resource "aws_lb" "LoadBalancer" {
 # Create Target Group
 resource "aws_lb_target_group" "tg" {
   name     = "my-target-group"
-  port     = 80
+  port     = 8080
   protocol = "HTTP"
   vpc_id      = var.vpc_id
 
@@ -28,7 +28,7 @@ resource "aws_lb_target_group" "tg" {
 # Attach ALB to Target Group
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.LoadBalancer.arn
-  port              = "8080"
+  port              = "80"
   protocol          = "HTTP"
 
   default_action {
