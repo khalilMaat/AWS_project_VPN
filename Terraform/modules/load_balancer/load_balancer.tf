@@ -1,3 +1,10 @@
+# Data source to get the ACM certificate
+data "aws_acm_certificate" "myCert" {
+  domain       = "khalilmaatoug.com"
+  most_recent = true
+  statuses = ["ISSUED"]
+}
+
 # Create ALB
 resource "aws_lb" "LoadBalancer" {
   name               = "LoadBalancer"
@@ -26,10 +33,12 @@ resource "aws_lb_target_group" "tg" {
 }
 
 # Attach ALB to Target Group
-resource "aws_lb_listener" "http" {
+resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.LoadBalancer.arn
-  port              = "80"
-  protocol          = "HTTP"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = data.aws_acm_certificate.myCert.arn
 
   default_action {
     type             = "forward"
