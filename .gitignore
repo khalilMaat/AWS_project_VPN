@@ -3,3 +3,5 @@ Terraform/.terraform*
 Terraform/terraform*
 
 aws_ssh.pem
+
+openssl/*

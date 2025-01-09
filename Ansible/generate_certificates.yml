@@ -1,0 +1,123 @@
+---
+- name: Generate Certificates with OpenSSL
+  hosts: localhost
+  gather_facts: false
+  vars:
+    ca_key_file: "/home/ubuntu/DevOps Configuration/AWS_project_VPN/openssl/Certificate Authority/ca.key"
+    ca_cert_file: "/home/ubuntu/DevOps Configuration/AWS_project_VPN/openssl/Certificate Authority/ca.crt"
+    ca_csr_file: "/home/ubuntu/DevOps Configuration/AWS_project_VPN/openssl/Certificate Authority/ca.csr"
+    server_key_file: "/home/ubuntu/DevOps Configuration/AWS_project_VPN/openssl/Certificate Authority/server.key"
+    server_csr_file: "/home/ubuntu/DevOps Configuration/AWS_project_VPN/openssl/Certificate Authority/server.csr"
+    server_cert_file: "/home/ubuntu/DevOps Configuration/AWS_project_VPN/openssl/Certificate Authority/server.crt"
+    client_key_file: "/home/ubuntu/DevOps Configuration/AWS_project_VPN/openssl/Certificate Authority/client.key"
+    client_csr_file: "/home/ubuntu/DevOps Configuration/AWS_project_VPN/openssl/Certificate Authority/client.csr"
+    client_cert_file: "/home/ubuntu/DevOps Configuration/AWS_project_VPN/openssl/Certificate Authority/client.crt"
+    cert_days_valid: 365
+  tasks:
+    # Step 1: Generate the CA Private Key
+    - name: Generate CA private key
+      community.crypto.openssl_privatekey:
+        path: "{{ ca_key_file }}"
+        size: 2048
+        type: RSA
+        
+    # Step 2: Create the CA CSR (to define subject details like country, organization, etc.)
+    - name: Create CA CSR
+      community.crypto.openssl_csr:
+        path: "{{ ca_csr_file }}"
+        privatekey_path: "{{ ca_key_file }}"
+        subject:
+          countryName: "US"
+          stateOrProvinceName: "California"
+          localityName: "San Francisco"
+          organizationName: "KhalilCP"
+          organizationalUnitName: "IT Department"
+          commonName: "My CA"
+
+    # Step 3: Create a CA Certificate
+    - name: Create CA certificate
+      community.crypto.x509_certificate:
+        path: "{{ ca_cert_file }}"
+        privatekey_path: "{{ ca_key_file }}"
+        csr_path: "{{ ca_csr_file }}"
+        provider: selfsigned
+        selfsigned_not_after: "+{{ cert_days_valid }}d"
+
+    # Step 4: Generate the Server Private Key
+    - name: Generate server private key
+      community.crypto.openssl_privatekey:
+        path: "{{ server_key_file }}"
+        size: 2048
+        type: RSA
+
+    # Step 5: Create the Server CSR
+    - name: Create server CSR
+      community.crypto.openssl_csr:
+        path: "{{ server_csr_file }}"
+        privatekey_path: "{{ server_key_file }}"
+        subject:
+          commonName: "server.local"
+
+    # Step 6: Sign the Server Certificate with the CA
+    - name: Sign the server certificate with the CA
+      community.crypto.x509_certificate:
+        path: "{{ server_cert_file }}"
+        csr_path: "{{ server_csr_file }}"
+        provider: ownca #This tells Ansible to use your own Certificate Authority (CA) to sign the certificate.
+        ownca_path: "{{ ca_cert_file }}"
+        ownca_privatekey_path: "{{ ca_key_file }}"
+        ownca_not_after: "+{{ cert_days_valid }}d"
+
+    # Step 7: Generate the Client Private Key
+    - name: Generate client private key
+      community.crypto.openssl_privatekey:
+        path: "{{ client_key_file }}"
+        size: 2048
+        type: RSA
+
+    # Step 8: Create the Client CSR
+    - name: Create client CSR
+      community.crypto.openssl_csr:
+        path: "{{ client_csr_file }}"
+        privatekey_path: "{{ client_key_file }}"
+        subject:
+          commonName: "client.local"
+
+    # Step 9: Sign the Client Certificate with the CA
+    - name: Sign the client certificate with the CA
+      community.crypto.x509_certificate:
+        path: "{{ client_cert_file }}"
+        csr_path: "{{ client_csr_file }}"
+        provider: ownca # This tells Ansible to use your own Certificate Authority (CA) to sign the certificate.
+        ownca_path: "{{ ca_cert_file }}"
+        ownca_privatekey_path: "{{ ca_key_file }}"
+        ownca_not_after: "+{{ cert_days_valid }}d"
+
+    # Verify Output
+    - name: Display generated files
+      debug:
+        msg:
+          - "CA Key: {{ ca_key_file }}"
+          - "CA Cert: {{ ca_cert_file }}"
+          - "Server Key: {{ server_key_file }}"
+          - "Server Cert: {{ server_cert_file }}"
+          - "Client Key: {{ client_key_file }}"
+          - "Client Cert: {{ client_cert_file }}"
+
+
+# Playbook Explanation:
+# CA Key and Certificate:
+
+# Generates the CA private key (ca.key).
+# Creates a self-signed CA certificate (ca.crt).
+# Server Key and Certificate:
+
+# Generates the server private key (server.key) import on AWS ACM.
+# Creates a CSR for the server (server.csr).
+# Signs the server CSR with the CA to generate the server certificate (server.crt).
+# Client Key and Certificate:
+
+# Generates the client private key (client.key).
+# Creates a CSR for the client (client.csr).
+# Signs the client CSR with the CA to generate the client certificate (client.crt).
+
