@@ -27,6 +27,24 @@ The project addresses the challenge of connecting on-premises infrastructure to 
   - Configured security groups and NACLs for secure communication.
   - Separate route tables for public and private subnets.
   - Create openSSL certificate self-assigned.
+- **Generate Certificate:**
+  - git clone https://github.com/OpenVPN/easy-rsa.git
+  - cd easy-rsa/easyrsa3
+  - ./easyrsa init-pki
+  - ./easyrsa build-ca nopass
+  - ./easyrsa build-server-full www.server.com nopass
+  - ./easyrsa build-client-full www.client.com nopass
+  - mkidr ~/custo_folder
+  - cp pki/ca.crt ~/custo_folder
+  - cp pki/issued/server.crt ~/custo_folder
+  - cp pki/private/server.key ~/custo_folder
+  - cp pki/issued/client.crt ~/custo_folder
+  - cp pki/private/client.key ~/custo_folder
+    
+- **Import Certificate To ACM aws:**
+  
+- **Create AWS VPC endpoint:**
+  
 - **On-Prem to AWS Connectivity:**
   - VPN connection set up to securely connect on-premises infrastructure to the AWS cloud environment.
   - Enables seamless migration of workloads from on-prem to AWS.
