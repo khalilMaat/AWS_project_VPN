@@ -10,6 +10,7 @@ terraform {
 
 provider "aws" {
     region = "us-east-1"
+    profile = "account-tekup" # the profile name in credential file
 }
 
 module "my_vpc" {

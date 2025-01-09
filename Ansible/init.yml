@@ -26,8 +26,12 @@
         auto_attach: true
       when: ansible_facts['distribution'] == "RedHat"
 
-    - name: Change hostname of instnces.
-      ansible.builtin.shell: hostnamectl hostname "{{ ansible_hostname }}"
+    - name: Set the hostname
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Refresh Ansible facts to detect the new hostname
+      ansible.builtin.setup:
 
     - name: Create static dns hosts.
       template:

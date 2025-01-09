@@ -1,12 +1,18 @@
 ---
 - name: Playbook to deploy tomcat
   hosts: frontend
-  gather_facts: false
+  gather_facts: true
+  vars_files:
+    - credentials.yml
   tasks:
+    - name: Display the password.
+      debug:
+        var: password
+
     - name: Install requirements packages.
       apt:
         name:
-          - java-11-openjdk
+          - openjdk-17-jdk
           - curl
           - wget
           - tar
@@ -24,12 +30,12 @@
         var: java_version
       ignore_errors: true
 
-    - name: Add group {{ GROUP_NAME }}
+    - name: Add group "{{ GROUP_NAME }}"
       ansible.builtin.group:
         name: "{{ GROUP_NAME }}"
         state: present
 
-    - name: Add user {{ USER_NAME }}
+    - name: Add user "{{ USER_NAME }}"
       ansible.builtin.user:
         name: "{{ USER_NAME }}"
         state: present
@@ -43,10 +49,22 @@
     - name: Unarchive the file.
       ansible.builtin.unarchive:
         src: /tmp/apache-tomcat-10.1.34.tar.gz
-        dest: /usr/local/tomcat10
+        dest: /usr/local
         remote_src: yes
-        owner: "{{ user_name }}"
-        group: "{{ group_name }}"
+        owner: "{{ USER_NAME }}"
+        group: "{{ GROUP_NAME }}"
+    
+    - name: Rename the extracted directory
+      ansible.builtin.command:
+        cmd: mv /usr/local/apache-tomcat-10.1.34 /usr/local/tomcat10
+    
+    - name: Give permission.
+      ansible.builtin.file:
+        path: /usr/local/tomcat10/bin
+        recurse: yes
+        owner: "{{ USER_NAME }}"
+        group: "{{ GROUP_NAME }}"
+        mode: u=rwx,g=rwx
 
     - name: Create service file for systemd.
       blockinfile:
@@ -54,23 +72,25 @@
         create: true
         block: |
           [Unit]
-          Description=Apache Tomcat Web App
-          Wants=network.target
+          Description=Apache Tomcat Web Application Container
           After=network.target
+
           [Service]
           Type=forking
-          Environment=CATALINA_PID=/usr/local/tomcat10/temp/tomcat.pid
-          Environment=CATALINA_HOME=/usr/local/tomcat10
-          Environment='CATALINA_OPTS=-Xms212M -Xmx512M -Djava.net.preferIPv4Stack=true'
-          Environment='JAVA_OPTS=-Djava.awt.headless=true'
-          ExecStart=/usr/local/tomcat10/bin/startup.sh
-          ExecStop=/usr/local/tomcat10/bin/shutdown.sh
-          SuccessExitStatus=143
+
           User=tomcat
           Group=tomcat
-          UMask=0007
-          RestartSec=10
-          Restart=always
+
+          Environment="JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64"
+          Environment="CATALINA_PID=/usr/local/tomcat10/temp/tomcat.pid"
+          Environment="CATALINA_HOME=/usr/local/tomcat10"
+          Environment="CATALINA_BASE=/usr/local/tomcat10"
+          Environment="CATALINA_OPTS=-Xms212M -Xmx512M -server -XX:+UseParallelGC"
+          Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
+
+          ExecStart=/usr/local/tomcat10/bin/startup.sh
+          ExecStop=/usr/local/tomcat10/bin/shutdown.sh
+
           [Install]
           WantedBy=multi-user.target
     
@@ -82,7 +102,7 @@
 
     - name: Restart service tomcat on redhat, in all cases, also issue daemon-reload to pick up config changes
       ansible.builtin.systemd_service:
-        state: restarted
+        state: started
         daemon_reload: true
         enabled: true
         name: tomcat
