@@ -26,6 +26,7 @@ The project addresses the challenge of connecting on-premises infrastructure to 
 - **Security:**
   - Configured security groups and NACLs for secure communication.
   - Separate route tables for public and private subnets.
+  - Create openSSL certificate self-assigned.
 - **On-Prem to AWS Connectivity:**
   - VPN connection set up to securely connect on-premises infrastructure to the AWS cloud environment.
   - Enables seamless migration of workloads from on-prem to AWS.
