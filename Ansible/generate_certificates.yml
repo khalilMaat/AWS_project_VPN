@@ -32,7 +32,8 @@
           localityName: "San Francisco"
           organizationName: "KhalilCP"
           organizationalUnitName: "IT Department"
-          commonName: "My CA"
+          emailAddress: "maatoug610@gmail.com"
+          commonName: "www.khalil.com"
 
     # Step 3: Create a CA Certificate
     - name: Create CA certificate
